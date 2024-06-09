@@ -1,5 +1,6 @@
 package com.example.gameinfoapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -10,8 +11,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gameinfoapp.R
+import com.example.gameinfoapp.models.Game
 import com.example.gameinfoapp.network.ApiClient
 import com.example.gameinfoapp.ui.adapters.GameListAdapter
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +24,8 @@ import kotlinx.coroutines.withContext
 class MainActivity : AppCompatActivity(), GameListAdapter.OnItemClickListener {
 
     private lateinit var gameListAdapter: GameListAdapter
+
+    private lateinit var games: List<Game>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +47,10 @@ class MainActivity : AppCompatActivity(), GameListAdapter.OnItemClickListener {
                 val shuffledGameList = gameList.shuffled()
 
                 // Pick the first 4 games from the shuffled list
-                val selectedGames = shuffledGameList.take(4)
+                games = shuffledGameList.take(4)
 
                 withContext(Dispatchers.Main) {
-                    gameListAdapter.updateList(selectedGames)
+                    gameListAdapter.updateList(games)
                 }
             } catch (e: Exception) {
                 // Handle error
@@ -56,7 +61,11 @@ class MainActivity : AppCompatActivity(), GameListAdapter.OnItemClickListener {
 
 
     override fun onItemClick(position: Int) {
-        // Handle item click event
+        val gameId = games[position].id
+        val intent = Intent(this@MainActivity, GameDetailActivity::class.java)
+        intent.putExtra("gameId", gameId)
+        startActivity(intent)
     }
+
 }
 
