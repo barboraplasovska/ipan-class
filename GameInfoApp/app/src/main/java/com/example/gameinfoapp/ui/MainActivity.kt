@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gameinfoapp.R
@@ -30,13 +31,21 @@ class MainActivity : AppCompatActivity(), GameListAdapter.OnItemClickListener {
         gameListAdapter = GameListAdapter(this) // Pass `this` as the listener
         recyclerView.adapter = gameListAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         // Fetch game list from API
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val gameList = ApiClient.gameService.getGameList()
+
+                // Shuffle the list of games
+                val shuffledGameList = gameList.shuffled()
+
+                // Pick the first 4 games from the shuffled list
+                val selectedGames = shuffledGameList.take(4)
+
                 withContext(Dispatchers.Main) {
-                    gameListAdapter.updateList(gameList)
+                    gameListAdapter.updateList(selectedGames)
                 }
             } catch (e: Exception) {
                 // Handle error
@@ -44,6 +53,7 @@ class MainActivity : AppCompatActivity(), GameListAdapter.OnItemClickListener {
             }
         }
     }
+
 
     override fun onItemClick(position: Int) {
         // Handle item click event
