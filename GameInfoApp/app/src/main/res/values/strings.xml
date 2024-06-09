@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GameInfoApp</string>
+    <string name="game_image">Game Image</string>
+    <string name="game_info">Game Info</string>
+    <string name="name">Name:</string>
+    <string name="gamename">gameName</string>
+    <string name="type">Type:</string>
+    <string name="gametype">gameType</string>
+    <string name="nb_players">Nb players:</string>
+    <string name="gamenbplayers">gameNbPlayers</string>
+    <string name="year">Year:</string>
+    <string name="gameyear">gameYear</string>
+    <string name="this_is_a_description_of_the_game">This is a description of the game.</string>
+    <string name="do_you_want_to_know_more">DO YOU WANT TO KNOW MORE?</string>
+</resources>
