@@ -38,7 +38,7 @@ class ListActivity : AppCompatActivity() {
             try {
                 todos = ApiClient.todoService.getUsersTodosList(userId) as ArrayList<Todo>
                 if (newTodo != null) {
-                    todos.add( Todo(
+                    todos.add(Todo(
                         todos.size + 1,
                         userId,
                         newTodo,
@@ -55,8 +55,8 @@ class ListActivity : AppCompatActivity() {
                     // Set greetings text
                     val greetingsTextView = findViewById<TextView>(R.id.greetingsTextview)
                     val userName = getUserDisplayName(userId)
-                    val greetingsText = getString(R.string.greetings, userName)
-                    greetingsTextView.text = "Hello ${userName}, here is what lies in your todo list for today:"
+                    val greetingsText = "Hello <b>$userName</b>, here is what lies in your todo list for today:"
+                    greetingsTextView.text = HtmlCompat.fromHtml(greetingsText, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
                     // Set hello again text
                     val helloAgainTextView = findViewById<TextView>(R.id.helloAgainTextView)
@@ -66,10 +66,10 @@ class ListActivity : AppCompatActivity() {
                     val totalItemsText = findViewById<TextView>(R.id.totalItemsText)
                     val totalItems = todos.size
                     val completed = todos.filter { todo -> todo.completed }.count()
-                    totalItemsText.text = "${totalItems} items total"
+                    totalItemsText.text = "$totalItems items total"
 
                     val doneItemsText = findViewById<TextView>(R.id.doneItemsText)
-                    doneItemsText.text = "${completed} Done"
+                    doneItemsText.text = "$completed Done"
 
                     val notDoneItemsText = findViewById<TextView>(R.id.todoItemsText)
                     notDoneItemsText.text = "${totalItems - completed} ToDo"
