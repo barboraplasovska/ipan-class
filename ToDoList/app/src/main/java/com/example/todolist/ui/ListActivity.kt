@@ -3,7 +3,9 @@ package com.example.todolist.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
@@ -22,6 +24,12 @@ class ListActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ToDoListAdapter
+    private lateinit var progressBar: ProgressBar
+    private lateinit var greetingsTextView: TextView
+    private lateinit var helloAgainTextView: TextView
+    private lateinit var totalItemsText: TextView
+    private lateinit var doneItemsText: TextView
+    private lateinit var notDoneItemsText: TextView
 
     private lateinit var todos: ArrayList<Todo>
 
@@ -32,6 +40,16 @@ class ListActivity : AppCompatActivity() {
         // Retrieve user ID from intent
         val userId = intent.getIntExtra("userId", -1)
         val newTodo = intent.getStringExtra("newTodoTitle")
+
+        progressBar = findViewById(R.id.progressBar)
+        greetingsTextView = findViewById<TextView>(R.id.greetingsTextview)
+       helloAgainTextView = findViewById<TextView>(R.id.helloAgainTextView)
+        totalItemsText = findViewById<TextView>(R.id.totalItemsText)
+        doneItemsText = findViewById<TextView>(R.id.doneItemsText)
+        notDoneItemsText = findViewById<TextView>(R.id.todoItemsText)
+
+        // Show the ProgressBar
+        toggleProgressBarVisibility(true);
 
         // Fetch user's todo list using Retrofit
         CoroutineScope(Dispatchers.IO).launch {
@@ -53,28 +71,33 @@ class ListActivity : AppCompatActivity() {
                     recyclerView.layoutManager = LinearLayoutManager(this@ListActivity)
 
                     // Set greetings text
-                    val greetingsTextView = findViewById<TextView>(R.id.greetingsTextview)
                     val userName = getUserDisplayName(userId)
                     val greetingsText = "Hello <b>$userName</b>, here is what lies in your todo list for today:"
                     greetingsTextView.text = HtmlCompat.fromHtml(greetingsText, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
                     // Set hello again text
-                    val helloAgainTextView = findViewById<TextView>(R.id.helloAgainTextView)
                     helloAgainTextView.text = getString(R.string.greetings2)
-
                     // Set total items text
-                    val totalItemsText = findViewById<TextView>(R.id.totalItemsText)
+
                     val totalItems = todos.size
                     val completed = todos.filter { todo -> todo.completed }.count()
                     totalItemsText.text = "$totalItems items total"
 
-                    val doneItemsText = findViewById<TextView>(R.id.doneItemsText)
+
                     doneItemsText.text = "$completed Done"
 
-                    val notDoneItemsText = findViewById<TextView>(R.id.todoItemsText)
                     notDoneItemsText.text = "${totalItems - completed} ToDo"
+
+                    withContext(Dispatchers.Main) {
+                        // Hide the ProgressBar in case of error
+                        toggleProgressBarVisibility(false);
+                    }
                 }
             } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // Hide the ProgressBar in case of error
+                   toggleProgressBarVisibility(false);
+                }
                 Log.e("ListActivity", "Error fetching todo list: ${e.message}")
             }
         }
@@ -99,4 +122,23 @@ class ListActivity : AppCompatActivity() {
             else -> "User"
         }
     }
+
+    private fun toggleProgressBarVisibility(showProgressBar: Boolean) {
+        if (showProgressBar) {
+            progressBar.visibility = View.VISIBLE
+            greetingsTextView.visibility = View.GONE
+            helloAgainTextView.visibility = View.GONE
+            doneItemsText.visibility = View.GONE
+            totalItemsText.visibility = View.GONE
+            notDoneItemsText.visibility = View.GONE
+        } else {
+            progressBar.visibility = View.GONE
+            greetingsTextView.visibility = View.VISIBLE
+            helloAgainTextView.visibility = View.VISIBLE
+            doneItemsText.visibility = View.VISIBLE
+            totalItemsText.visibility = View.VISIBLE
+            notDoneItemsText.visibility = View.VISIBLE
+        }
+    }
+
 }
