@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.models.Todo
 
-class ToDoListAdapter(private val itemList: List<Todo>) :
+class ToDoListAdapter(private val itemList: ArrayList<Todo>, private val onItemCheckedChanged: (Todo) -> Unit) :
     RecyclerView.Adapter<ToDoListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,8 +19,14 @@ class ToDoListAdapter(private val itemList: List<Todo>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.itemTextView.text = itemList[position].title
-        holder.checkBox.isChecked = itemList[position].completed
+        val todo = itemList[position]
+        holder.itemTextView.text = todo.title
+        holder.checkBox.isChecked = todo.completed
+
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            todo.completed = isChecked
+            onItemCheckedChanged(todo)
+        }
     }
 
     override fun getItemCount(): Int {

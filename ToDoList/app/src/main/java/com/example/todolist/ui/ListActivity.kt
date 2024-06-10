@@ -66,7 +66,14 @@ class ListActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     // Initialize RecyclerView
                     recyclerView = findViewById(R.id.recyclerView)
-                    adapter = ToDoListAdapter(todos)
+                    adapter = ToDoListAdapter(todos) { updatedTodo ->
+                        // Update the counts and UI here
+                        val totalItems = todos.size
+                        val completed = todos.count { it.completed }
+                        totalItemsText.text = "$totalItems items total"
+                        doneItemsText.text = "$completed Done"
+                        notDoneItemsText.text = "${totalItems - completed} ToDo"
+                    }
                     recyclerView.adapter = adapter
                     recyclerView.layoutManager = LinearLayoutManager(this@ListActivity)
 
