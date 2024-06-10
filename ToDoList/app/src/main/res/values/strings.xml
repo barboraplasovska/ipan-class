@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+    <string name="my_todolist">My TodoList</string>
+    <string name="an_application_by_barbora_plasovska">An application by Barbora Plasovska</string>
+    <string name="login_as">Login as:</string>
+    <string name="login">Login</string>
+    <string name="made_at">Made at</string>
+    <string name="total_todo">%1$d items total</string>
+    <string name="todo">%1$d ToDo</string>
+    <string name="done">%1$d Done</string>
+    <string name="greetings">Hello &lt;b>%1$s&lt;/b>, here is what lies in your todo list for today:</string>
+    <string name="greetings2">The road so far...</string>
+    <string name="mom">MOM</string>
+    <string name="dad">DAD</string>
+    <string name="me">ME</string>
+    <string name="sister">SISTER</string>
+    <string name="guest">GUEST</string>
+    <string name="epita_logo">Epita logo</string>
+    <string name="wrong_login">Wrong login</string>
+</resources>
